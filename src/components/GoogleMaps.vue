@@ -1,14 +1,41 @@
 <template>
   <main>
+    <gmap-map
+    :center="{lat:47.9282, lng: -121.5045}"
+    :zoom="8"
+    >
+      <gmap-marker
+         :key="index"
+         v-for="(location, index) in locations"
+
+         :position="{ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
+         :clickable="true"
+         :draggable="false"
+         @click="center={ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
+      ></gmap-marker>
+    </gmap-map>
   </main>
 </template>
 
 <script>
+import Vue from 'vue'
+import * as VueGoogleMaps from 'vue2-google-maps'
+import location from '../../static/location.json'
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: process.env.MAP_KEY,
+    libraries: 'places' // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+  }
+})
+
 export default {
-  name: 'HelloWorld',
+  name: 'GoogleMaps',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      locations: location.locations
     }
   }
 }
@@ -16,18 +43,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+ .vue-map-container {
+  width: 100vw;
+  height: 100vh;
+ }
 </style>
