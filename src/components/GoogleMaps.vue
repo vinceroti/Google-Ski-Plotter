@@ -20,7 +20,8 @@
 <script>
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
-import location from '../../static/location.json'
+import axios from 'axios'
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.MAP_KEY,
@@ -35,8 +36,17 @@ export default {
   name: 'GoogleMaps',
   data () {
     return {
-      locations: location.locations
+      locations: ''
     }
+  },
+  mounted: function() {
+    console.log('mounted')
+    axios.get('http://localhost:8081/api')
+    .then(function(response){
+        console.log(response);
+        this.locations  = response.data;
+
+    }.bind(this))
   }
 }
 </script>
