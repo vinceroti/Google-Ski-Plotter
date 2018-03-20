@@ -14,6 +14,9 @@
          @click="center={ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
       ></gmap-marker>
     </gmap-map>
+    <ul class="dates">
+      <li v-for="(date, index) in dates "> {{ date +", " + (index + 1) }} </li>
+    </ul>
   </main>
 </template>
 
@@ -36,7 +39,8 @@ export default {
   name: 'GoogleMaps',
   data () {
     return {
-      locations: ''
+      locations: '',
+      dates: ''
     }
   },
   mounted: function() {
@@ -44,8 +48,8 @@ export default {
     axios.get('http://localhost:8081/api')
     .then(function(response){
         console.log(response);
-        this.locations  = response.data;
-
+        this.locations  = response.data.locations
+        this.dates = response.data.dates
     }.bind(this))
   }
 }
@@ -56,5 +60,16 @@ export default {
  .vue-map-container {
   width: 100vw;
   height: 100vh;
+ }
+ .dates {
+  position: absolute;
+  left: 0;
+  top: 10%;
+  width: 20%;
+  padding-left: 15px;
+  list-style-type: none;
+ }
+ .dates li {
+  text-align: left;
  }
 </style>
