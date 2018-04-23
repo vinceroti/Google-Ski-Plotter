@@ -37,7 +37,8 @@ app.get('/api', (req, res) => {
       if (
         (obj.latitudeE7 > (mountains[mountain][0] - 300000) && obj.latitudeE7 < (mountains[mountain][0]  + 300000)) &&
         (obj.longitudeE7 > (mountains[mountain][1] - 300000) && obj.longitudeE7 < (mountains[mountain][1]  + 300000) &&
-          type === 'ON_BICYCLE')
+          type === 'ON_BICYCLE' &&
+          confidence > 70)
         ) {
         array.push(obj);
         dates.push(currentDate);

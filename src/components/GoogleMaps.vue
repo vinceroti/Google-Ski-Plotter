@@ -1,9 +1,18 @@
 <template>
   <main>
+    <LoadingModal/>
+    <div class="slider" v-bind:style="{ maxWidth: maxWidth }" >
+      <ul class="dates">
+        <h2> Days On The Hill </h2>
+        <p> Days: {{ dates.length }}
+        <li v-for="(date, index) in dates "> {{ date +", " + (index + 1) }} </li>
+      </ul>
+    </div>
     <gmap-map
     :center="{lat:47.9282, lng: -121.5045}"
     :zoom="8"
     >
+    <a id="slider-toggle" href="#"  v-on:click="maxWidth === 0 ? maxWidth = '300px' : maxWidth = 0">&#9776;</a>
       <gmap-marker
          :key="index"
          v-for="(location, index) in locations"
@@ -14,9 +23,6 @@
          @click="center={ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
       ></gmap-marker>
     </gmap-map>
-    <ul class="dates">
-      <li v-for="(date, index) in dates "> {{ date +", " + (index + 1) }} </li>
-    </ul>
   </main>
 </template>
 
@@ -24,6 +30,7 @@
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import axios from 'axios'
+import LoadingModal from './LoadingModal'
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -37,10 +44,15 @@ Vue.use(VueGoogleMaps, {
 
 export default {
   name: 'GoogleMaps',
+  components: {
+    LoadingModal
+  },
+
   data () {
     return {
       locations: '',
-      dates: ''
+      dates: '',
+      maxWidth: 0,
     }
   },
   mounted: function() {
@@ -51,25 +63,44 @@ export default {
         this.locations  = response.data.locations
         this.dates = response.data.dates
     }.bind(this))
-  }
+  },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
- .vue-map-container {
-  width: 100vw;
-  height: 100vh;
- }
- .dates {
-  position: absolute;
-  left: 0;
-  top: 10%;
-  width: 20%;
-  padding-left: 15px;
-  list-style-type: none;
- }
- .dates li {
-  text-align: left;
- }
+
+<style>
+  main {
+    display: flex;
+  }
+  .vue-map-hidden {
+    display: inline !important;
+  }
+  .vue-map-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  .dates {
+    list-style-type: none;
+    padding: 0;
+    width: 300px;
+  }
+  .dates li {
+    text-align: left;
+    padding-left: 20px;
+  }
+  #slider-toggle {
+    position: absolute;
+    left: 120px;
+    top: 7px;
+    text-decoration: none;
+    font-size: 30px;
+  }
+  .slider {
+    height: 100vh;
+    width: 300px;
+    overflow-y: auto;
+    transition: max-width 0.2s ease-in-out;
+  }
+
 </style>
