@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 const JSONStream = require('JSONStream')
 const fs = require("fs");
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+// in latest body-parser use like below.
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const mountains = {
   'crystal': [(46.9282  * 1e7) , (-121.5045  * 1e7)],
@@ -11,7 +16,8 @@ const mountains = {
   'breck': [(39.4817  * 1e7), (-106.0384  * 1e7)]
 }
 
-app.get('/api', (req, res) => {
+app.post('/', (req, res) => {
+  console.log(req.query, req.params, req.body)
   let lastMatchDate = '';
 
   let array = [];

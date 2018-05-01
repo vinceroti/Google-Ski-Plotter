@@ -29,7 +29,6 @@
 <script>
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
-import axios from 'axios'
 import LoadingModal from './LoadingModal'
 
 Vue.use(VueGoogleMaps, {
@@ -52,18 +51,12 @@ export default {
     return {
       locations: '',
       dates: '',
-      maxWidth: 0,
+      maxWidth: 0
     }
   },
-  mounted: function() {
+  mounted: function () {
     console.log('mounted')
-    axios.get('http://localhost:8081/api')
-    .then(function(response){
-        console.log(response);
-        this.locations  = response.data.locations
-        this.dates = response.data.dates
-    }.bind(this))
-  },
+  }
 }
 </script>
 
