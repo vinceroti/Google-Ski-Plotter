@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div :class="classes">
     <h1> Load your google maps JSON</h1>
     <label>File
       <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
@@ -12,8 +12,10 @@
 import axios from 'axios'
 export default {
   name: 'LoadingModal',
+  props: ['getData'],
   data () {
     return {
+      classes: 'modal',
       file: ''
     }
   },
@@ -23,16 +25,17 @@ export default {
       console.log(this.file)
     },
     submitFile () {
+      let self = this
       let formData = new FormData()
       formData.append('file', this.file)
-      console.log(formData, this.file)
       axios.post('http://localhost:8081', formData, {
         headers: {
-          'Content-Type': 'undefined'
+          'Content-Type': 'multipart/form-data'
         }
-      }).then(function () {
-        console.log('SUCCESS!!')
-      }).catch(function () {
+      }).then(function (res) {
+        self.getData(res.data)
+        self.classes += ' hidden'
+      }).catch(function (res) {
         console.log('FAILURE!!')
       })
     }
@@ -42,6 +45,10 @@ export default {
 
 
 <style>
+  .hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
   .modal {
     position: fixed;
     width: 90vw;
@@ -53,5 +60,6 @@ export default {
     color: #fff;
     z-index: 9;
     border-radius: 5px;
+    transition: ease-out 0.3s all;
   }
 </style>

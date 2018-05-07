@@ -1,6 +1,6 @@
 <template>
   <main>
-    <LoadingModal/>
+    <LoadingModal :getData="getData"/>
     <div class="slider" v-bind:style="{ maxWidth: maxWidth }" >
       <ul class="dates">
         <h2> Days On The Hill </h2>
@@ -56,6 +56,13 @@ export default {
   },
   mounted: function () {
     console.log('mounted')
+  },
+  methods: {
+    getData(data) {
+      this.locations = data.locations
+      this.dates = data.dates
+      console.log(data)
+    }
   }
 }
 </script>

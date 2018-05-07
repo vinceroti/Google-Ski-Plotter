@@ -8,6 +8,10 @@ app.use(bodyParser.urlencoded());
 // in latest body-parser use like below.
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+
 const mountains = {
   'crystal': [(46.9282  * 1e7) , (-121.5045  * 1e7)],
   'snoqual': [(47.43916491 * 1e7), (-121.424331636 * 1e7)],
@@ -16,14 +20,15 @@ const mountains = {
   'breck': [(39.4817  * 1e7), (-106.0384  * 1e7)]
 }
 
-app.post('/', (req, res) => {
-  console.log(req.query, req.params, req.body)
+
+app.post('/', upload.single('file'), (req, res, next) => {
+  console.log(req.query, req.params, req.body, req.file)
   let lastMatchDate = '';
 
   let array = [];
   let dates = [];
 
-  let stream = fs.createReadStream('./static/location-full.json'),
+  let stream = fs.createReadStream(req.file.path),
       parser = JSONStream.parse('*.*');
 
   res.set('Access-Control-Allow-Origin', '*')
