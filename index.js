@@ -22,7 +22,7 @@ const mountains = {
 
 
 app.post('/', upload.single('file'), (req, res, next) => {
-  console.log(req.query, req.params, req.body, req.file)
+  console.log(req.params, req.body, req.file)
   let lastMatchDate = '';
 
   let array = [];
