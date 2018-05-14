@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run server | npm run vue ",
-    "start": "npm run dev",
+    "start": "node index.js",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
     "server": "pm2 start index.js --watch --name server --ignore-watch='./uploads/*'",

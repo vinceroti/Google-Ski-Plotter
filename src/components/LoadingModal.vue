@@ -45,12 +45,10 @@ export default {
       const formData = new FormData()
 
       formData.append('file', this.file)
-      this.$refs.disabled = true
 
       axios.post(process.env.SERVER, formData, {
         onUploadProgress: function (progressEvent) {
           const progress = Math.round( (progressEvent.loaded * 100) / progressEvent.total  )
-          console.log(progress)
           self.progress = progress
           if (progress === 100) {
             self.loading = true
