@@ -1,5 +1,6 @@
 <template>
   <div  class="modal">
+  {{process.env.MAP_KEY   }}
     <div v-if="!loading" ref="handleFileUpload" class="flex-container">
       <h1 class="full-width">Google Maps Skiing Plotter</h1>
       <p class="full-width">This is an application that will take your google maps history data, and find out how many days you went skiing at a resort year. No infomation is saved but it is sent to a server to parse through the large JSON file</p>

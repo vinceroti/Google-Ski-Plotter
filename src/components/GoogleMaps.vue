@@ -1,6 +1,5 @@
 <template>
   <main>
-    {{process.env.MAP_KEY}}
     <LoadingModal :getData="getData" v-if="noFile"/>
     <div class="slider" v-bind:style="{ maxWidth: maxWidth }" >
       <ul class="dates">
