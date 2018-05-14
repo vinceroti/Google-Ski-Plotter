@@ -68,7 +68,7 @@ export default {
       this.dates = data.dates
       this.noFile = false
     },
-    geolocation: () => {
+    geolocation: function () {
       navigator.geolocation.getCurrentPosition((position) => {
         this.currentLocation = {
           lat: position.coords.latitude,
@@ -114,4 +114,5 @@ export default {
     overflow-y: auto;
     transition: max-width 0.2s ease-in-out;
   }
+
 </style>
