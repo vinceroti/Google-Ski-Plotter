@@ -2,7 +2,10 @@ const express = require('express');
 const app = express();
 const JSONStream = require('JSONStream')
 const fs = require("fs");
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const serveStatic = require('serve-static');
+app.use(serveStatic(__dirname + "/dist"));
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -14,8 +17,8 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 const mountains = {
   'crystal': [(46.9282  * 1e7) , (-121.5045  * 1e7)],
