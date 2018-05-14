@@ -1,15 +1,15 @@
 <template>
   <main>
-    <LoadingModal :getData="getData"/>
+    <LoadingModal :getData="getData" v-if="noFile"/>
     <div class="slider" v-bind:style="{ maxWidth: maxWidth }" >
       <ul class="dates">
         <h2> Days On The Hill </h2>
         <p> Days: {{ dates.length }}
-        <li v-for="(date, index) in dates "> {{ date +", " + (index + 1) }} </li>
+        <li v-for="(date, index) in dates " v-bind:key="(index + 1) "> {{ date +", " + (index + 1) }} </li>
       </ul>
     </div>
     <gmap-map
-    :center="{lat:47.9282, lng: -121.5045}"
+    :center="{lat:currentLocation.lat, lng:currentLocation.lng}"
     :zoom="8"
     >
     <a id="slider-toggle" href="#"  v-on:click="maxWidth === 0 ? maxWidth = '300px' : maxWidth = 0">&#9776;</a>
@@ -49,19 +49,29 @@ export default {
 
   data () {
     return {
+      currentLocation : { lat : 0, lng : 0},
       locations: '',
       dates: '',
-      maxWidth: 0
+      maxWidth: 0,
+      noFile: true
     }
   },
   mounted: function () {
-    console.log('mounted')
+    this.geolocation()
   },
   methods: {
     getData(data) {
       this.locations = data.locations
       this.dates = data.dates
-      console.log(data)
+      this.noFile = false
+    },
+    geolocation : function() {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.currentLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
     }
   }
 }

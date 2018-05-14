@@ -1,40 +1,66 @@
 <template>
-  <div :class="classes">
-    <h1> Load your google maps JSON</h1>
-    <label>File
-      <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
-    </label>
-    <button v-on:click="submitFile()">Submit</button>
+  <div  class="modal">
+    <div v-if="!loading" ref="handleFileUpload" class="flex-container">
+      <h1 class="full-width">Google Maps Skiing Plotter</h1>
+      <p class="full-width">This is an application that will take your google maps history data, and find out how many days you went skiing at a resort year. No infomation is saved but it is sent to a server to parse through the large JSON file</p>
+      <label class="full-width">File
+        <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
+      </label>
+      <button v-on:click="submitFile()">Submit</button>
+      <div class="full-width bar-container flex-container">
+        <span class="full-width">{{ progress }}%</span>
+        <div class="bar" :style="'width:' + progress + '%'"></div>
+      </div>
+    </div>
+    <div v-if="loading" class="flex-container">
+      <p class="full-width margin-bottom"> File upload complete, waiting on server response (This could take a few mins..)</p>
+      <loading-circle class="full-width"></loading-circle>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { Circle } from 'vue-loading-spinner'
+
 export default {
   name: 'LoadingModal',
   props: ['getData'],
+  components: {
+    'loading-circle': Circle
+  },
   data () {
     return {
-      classes: 'modal',
-      file: ''
+      file: '',
+      loading: false,
+      progress: 0
     }
   },
   methods: {
     handleFileUpload () {
       this.file = this.$refs.file.files[0]
-      console.log(this.file)
     },
     submitFile () {
-      let self = this
-      let formData = new FormData()
+      const self = this
+      const formData = new FormData()
+
       formData.append('file', this.file)
-      axios.post('http://localhost:8081', formData, {
+      this.$refs.disabled = true
+
+      axios.post(process.env.SERVER, formData, {
+        onUploadProgress: function (progressEvent) {
+          const progress = Math.round( (progressEvent.loaded * 100) / progressEvent.total  )
+          console.log(progress)
+          self.progress = progress
+          if (progress === 100) {
+            self.loading = true
+          }
+        },
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
         }
       }).then(function (res) {
         self.getData(res.data)
-        self.classes += ' hidden'
       }).catch(function (res) {
         console.log('FAILURE!!')
       })
@@ -44,22 +70,51 @@ export default {
 </script>
 
 
-<style>
-  .hidden {
-    opacity: 0;
-    visibility: hidden;
+<style scoped>
+  .bar {
+    display: flex;
+    height: 5px;
+    background: #fff;
+    margin: 30px;
+  }
+  .bar-container {
+    display: flex;
   }
   .modal {
-    position: fixed;
     width: 90vw;
-    height: 900vh;
+    height: 100vh;
     left: 50%;
+    top: 20%;
     height: 50%;
-    transform: translate(-50%, 50%);
+    position: fixed;
+    transform: translateX(-50%);
     background: gray;
     color: #fff;
     z-index: 9;
     border-radius: 5px;
     transition: ease-out 0.3s all;
+  }
+  .flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .full-width {
+    width: 100%;
+  }
+  button {
+    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+  }
+  .margin-bottom {
+    margin: 50px;
+  }
+  p {
+    margin:  5px 70px 20px;
+    font-size: 16px;
+  }
+  span {
+    margin: 10px 0;
   }
 </style>

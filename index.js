@@ -3,6 +3,11 @@ const app = express();
 const JSONStream = require('JSONStream')
 const fs = require("fs");
 var bodyParser = require('body-parser');
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 // in latest body-parser use like below.
@@ -30,9 +35,6 @@ app.post('/', upload.single('file'), (req, res, next) => {
 
   let stream = fs.createReadStream(req.file.path),
       parser = JSONStream.parse('*.*');
-
-  res.set('Access-Control-Allow-Origin', '*')
-
   stream.pipe(parser);
 
   parser.on('data',  (obj) => {
@@ -65,10 +67,14 @@ app.post('/', upload.single('file'), (req, res, next) => {
       locations: array,
       dates: dates.reverse()
      });
+    fs.unlink(req.file.path, (err) => {
+      if (err) throw err;
+      console.log(req.file.path + ' was deleted');
+    });
   });
 
 });
 
-app.listen(8081, () => {
+app.listen(process.env.PORT || 8081, () => {
   console.log('API listening');
 });

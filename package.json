@@ -5,11 +5,11 @@
   "author": "Vince Roti <vince.roti@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "npm run server | npm run vue",
+    "dev": "npm run server | npm run vue ",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
-    "server": "pm2 start index.js --watch --name server h --ignore-watch='./uploads/*'",
+    "server": "pm2 start index.js --watch --name server --ignore-watch='./uploads/*'",
     "vue": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "multer": "^1.3.0",
     "socket.io": "^2.0.4",
     "vue": "^2.5.2",
+    "vue-loading-spinner": "^1.0.11",
     "vue-router": "^3.0.1",
     "vue2-google-maps": "^0.8.9"
   },
