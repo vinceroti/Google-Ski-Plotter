@@ -2,7 +2,7 @@
   <div  class="modal">
     <div v-if="!loading" ref="handleFileUpload" class="flex-container">
       <h1 class="full-width">Google Maps Skiing Plotter</h1>
-      <p class="full-width">This is an application that will take your google maps history data, and find out how many days you went skiing at a resort year. No infomation is saved but it is sent to a server to parse through the large JSON file</p>
+      <p class="full-width">This is an application that will take your google maps history data, and find out how many days you went skiing at a resort. No infomation is saved but it is sent to a server to parse through the large JSON file</p>
       <label class="full-width">File
         <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
       </label>
@@ -22,6 +22,8 @@
 <script>
 import axios from 'axios'
 import { Circle } from 'vue-loading-spinner'
+import io from 'socket.io-client'
+const socket = io.connect(process.env.SERVER)
 
 export default {
   name: 'LoadingModal',
@@ -36,6 +38,12 @@ export default {
       progress: 0
     }
   },
+  mounted () {
+    const self = this
+    socket.on('recieve', function (res) {
+      self.getData(JSON.parse(res))
+    })
+  },
   methods: {
     handleFileUpload () {
       this.file = this.$refs.file.files[0]
@@ -43,30 +51,28 @@ export default {
     submitFile () {
       const self = this
       const formData = new FormData()
-
       formData.append('file', this.file)
 
       axios.post(process.env.SERVER, formData, {
         onUploadProgress: function (progressEvent) {
-          const progress = Math.round( (progressEvent.loaded * 100) / progressEvent.total  )
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           self.progress = progress
           if (progress === 100) {
             self.loading = true
           }
         },
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data'
         }
       }).then(function (res) {
-        self.getData(res.data)
+        console.log(res.data.status)
       }).catch(function (res) {
-        console.log('FAILURE!!')
+        console.log('FAILURE!!', res)
       })
     }
   }
 }
 </script>
-
 
 <style scoped>
   .bar {

@@ -49,7 +49,10 @@ export default {
 
   data () {
     return {
-      currentLocation : { lat : 0, lng : 0},
+      currentLocation: {
+        lat: 0,
+        lng: 0
+      },
       locations: '',
       dates: '',
       maxWidth: 0,
@@ -60,23 +63,22 @@ export default {
     this.geolocation()
   },
   methods: {
-    getData(data) {
+    getData (data) {
       this.locations = data.locations
       this.dates = data.dates
       this.noFile = false
     },
-    geolocation : function() {
+    geolocation: () => {
       navigator.geolocation.getCurrentPosition((position) => {
         this.currentLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
-        };
-      });
+        }
+      })
     }
   }
 }
 </script>
-
 
 <style>
   main {
@@ -112,5 +114,4 @@ export default {
     overflow-y: auto;
     transition: max-width 0.2s ease-in-out;
   }
-
 </style>
