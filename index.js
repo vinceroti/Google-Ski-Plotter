@@ -84,6 +84,7 @@ io.on('connection', function(socket){
         if (error) throw error;
         console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
       });
+      console.log(socket)
       socket.emit('done', JSON.stringify({
         locations: array,
         dates: dates.reverse()
