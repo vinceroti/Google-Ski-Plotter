@@ -82,7 +82,7 @@ io.on('connection', function(socket){
     });
 
     parser.on('end', () => {
-      socket.emit('generic', 'done'));
+      socket.emit('generic', 'done');
       socket.emit('recieve', JSON.stringify({
         locations: array,
         dates: dates.reverse()
