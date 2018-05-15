@@ -80,6 +80,7 @@ io.on('connection', function(socket){
     });
 
     parser.on('end', () => {
+      console.log(io.sockets.clients('connection'))
       socket.emit('done', JSON.stringify({
         locations: array,
         dates: dates.reverse()
