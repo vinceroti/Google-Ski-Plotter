@@ -6,7 +6,7 @@
       <label class="full-width">File
         <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
       </label>
-      <button v-on:click="submitFile()">Submit</button>
+      <button v-bind:disabled="disabled" v-on:click="submitFile()">Submit</button>
       <div class="full-width bar-container flex-container">
         <span class="full-width">{{ progress }}%</span>
         <div class="bar" :style="'width:' + progress + '%'"></div>
@@ -35,6 +35,7 @@ export default {
     return {
       file: '',
       loading: false,
+      disabled: false,
       progress: 0
     }
   },
@@ -55,6 +56,7 @@ export default {
     submitFile () {
       const self = this
       const formData = new FormData()
+      this.disabled = true
       formData.append('file', this.file)
 
       axios.post(process.env.SERVER, formData, {
