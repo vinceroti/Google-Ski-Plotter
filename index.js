@@ -39,8 +39,6 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 
-  setInterval(() => io.emit('generic', new Date().toTimeString()), 15000);
-
   app.post('/', upload.single('file'), (req, res, next) => {
     console.log(req.params, req.body, req.file)
     res.json({
