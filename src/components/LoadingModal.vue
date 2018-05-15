@@ -45,6 +45,17 @@ export default {
       console.log(res)
       self.getData(JSON.parse(res))
     })
+    socket.on('connection', function() {
+        console.log("client connected");
+    });
+
+    socket.on('connect_error', function(err) {
+        console.log("client connect_error: ", err);
+    });
+
+    socket.on('connect_timeout', function(err) {
+        console.log("client connect_timeout: ", err);
+    });
   },
   methods: {
     handleFileUpload () {
