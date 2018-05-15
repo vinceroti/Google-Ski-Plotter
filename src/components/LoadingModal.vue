@@ -44,6 +44,9 @@ export default {
       console.log(res)
       self.getData(JSON.parse(res))
     })
+    socket.on('test', function (msg) {
+      console.log(msg)
+    })
   },
   methods: {
     handleFileUpload () {

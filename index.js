@@ -45,6 +45,7 @@ io.on('connection', function(socket){
     res.json({
       status: 'file recieved'
     });
+    socket.emit('test', 'this is a test');
 
     let lastMatchDate = '';
 
