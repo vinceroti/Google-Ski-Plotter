@@ -41,7 +41,7 @@ export default {
   },
   mounted () {
     const self = this
-    socket.on('recieve', function (res) {
+    socket.on('done', function (res) {
       console.log(res)
       self.getData(JSON.parse(res))
     })
