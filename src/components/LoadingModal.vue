@@ -45,7 +45,7 @@ export default {
       console.log(res)
       self.getData(JSON.parse(res))
     })
-    socket.on('test', function (msg) {
+    socket.on('time', function (msg) {
       console.log(msg)
     })
   },
