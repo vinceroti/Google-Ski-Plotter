@@ -39,7 +39,7 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 
-  setInterval(() => io.emit('generic','ping'), 20000);
+  setInterval(() => io.emit('generic','ping'), 30000);
 
   app.post('/', upload.single('file'), (req, res, next) => {
     console.log(req.params, req.body, req.file)
