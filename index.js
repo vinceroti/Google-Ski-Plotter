@@ -39,7 +39,7 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 
-  setInterval(() => io.emit('time', new Date().toTimeString()), 15000);
+  setInterval(() => io.emit('generic', new Date().toTimeString()), 15000);
 
   app.post('/', upload.single('file'), (req, res, next) => {
     console.log(req.params, req.body, req.file)
@@ -82,6 +82,7 @@ io.on('connection', function(socket){
     });
 
     parser.on('end', () => {
+      socket.emit('generic', 'done'));
       socket.emit('recieve', JSON.stringify({
         locations: array,
         dates: dates.reverse()
