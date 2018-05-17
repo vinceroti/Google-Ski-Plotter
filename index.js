@@ -49,7 +49,7 @@ app.post('/', upload.single('file'), (req, res, next) => {
   stream.pipe(parser);
 
   parser.on('data',  (obj) => {
-    var currentDate = new Date(parseInt(obj.timestampMs)).toDateString()
+    const currentDate = new Date(parseInt(obj.timestampMs)).toDateString()
     if (lastMatchDate === currentDate) {
       return;
     }
