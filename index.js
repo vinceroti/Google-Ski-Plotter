@@ -31,70 +31,66 @@ const mountains = {
   'breck': [(39.4817  * 1e7), (-106.0384  * 1e7)]
 }
 
+app.post('/', upload.single('file'), (req, res, next) => {
+  console.log(req.body, req.file)
+
+  const socketId = req.body.socketId;
+  res.json({
+    status: 'file recieved'
+  });
+
+  let lastMatchDate = '';
+
+  let array = [];
+  let dates = [];
+
+  let stream = fs.createReadStream(req.file.path),
+      parser = JSONStream.parse('*.*');
+  stream.pipe(parser);
+
+  parser.on('data',  (obj) => {
+    var currentDate = new Date(parseInt(obj.timestampMs)).toDateString()
+    if (lastMatchDate === currentDate) {
+      return;
+    }
+    for (let mountain in mountains) {
+      if (obj.activity) {
+        var type = obj.activity[0].activity[0].type;
+        var confidence = obj.activity[0].activity[0].confidence;
+      }
+      if (
+        (obj.latitudeE7 > (mountains[mountain][0] - 300000) && obj.latitudeE7 < (mountains[mountain][0]  + 300000)) &&
+        (obj.longitudeE7 > (mountains[mountain][1] - 300000) && obj.longitudeE7 < (mountains[mountain][1]  + 300000) &&
+          type === 'ON_BICYCLE' &&
+          confidence > 70)
+        ) {
+        array.push(obj);
+        dates.push(currentDate);
+        lastMatchDate = currentDate;
+        return;
+      }
+    }
+
+  });
+
+  parser.on('end', () => {
+    io.to(socketId).emit('done', JSON.stringify({
+      locations: array,
+      dates: dates.reverse()
+    }));
+    fs.unlink(req.file.path, (err) => {
+      if (err) throw err;
+      console.log(req.file.path + ' was deleted');
+    });
+  });
+
+});
 
 io.on('connection', function(socket){
   console.log('a user connected');
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
-  });
-
-  app.post('/', upload.single('file'), (req, res, next) => {
-    console.log(req.params, req.body, req.file)
-    res.json({
-      status: 'file recieved'
-    });
-
-    let lastMatchDate = '';
-
-    let array = [];
-    let dates = [];
-
-    let stream = fs.createReadStream(req.file.path),
-        parser = JSONStream.parse('*.*');
-    stream.pipe(parser);
-
-    parser.on('data',  (obj) => {
-      var currentDate = new Date(parseInt(obj.timestampMs)).toDateString()
-      if (lastMatchDate === currentDate) {
-        return;
-      }
-      for (let mountain in mountains) {
-        if (obj.activity) {
-          var type = obj.activity[0].activity[0].type;
-          var confidence = obj.activity[0].activity[0].confidence;
-        }
-        if (
-          (obj.latitudeE7 > (mountains[mountain][0] - 300000) && obj.latitudeE7 < (mountains[mountain][0]  + 300000)) &&
-          (obj.longitudeE7 > (mountains[mountain][1] - 300000) && obj.longitudeE7 < (mountains[mountain][1]  + 300000) &&
-            type === 'ON_BICYCLE' &&
-            confidence > 70)
-          ) {
-          array.push(obj);
-          dates.push(currentDate);
-          lastMatchDate = currentDate;
-          return;
-        }
-      }
-
-    });
-
-    parser.on('end', () => {
-      io.clients((error, clients) => {
-        if (error) throw error;
-        console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
-      });
-      console.log(socket)
-      socket.emit('done', JSON.stringify({
-        locations: array,
-        dates: dates.reverse()
-      }));
-      fs.unlink(req.file.path, (err) => {
-        if (err) throw err;
-        console.log(req.file.path + ' was deleted');
-      });
-    });
-
   });
 });
 
