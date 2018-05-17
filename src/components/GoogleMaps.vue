@@ -1,7 +1,7 @@
 <template>
   <main>
     <LoadingModal :getData="getData" v-if="noFile"/>
-    <div class="slider" v-bind:style="{ maxWidth: maxWidth }" >
+    <div class="slider" v-if="!noFile" v-bind:style="{ maxWidth: maxWidth }" >
       <ul class="dates">
         <h2> Days On The Hill </h2>
         <p> Days: {{ dates.length }}
@@ -12,7 +12,7 @@
     :center="{lat:currentLocation.lat, lng:currentLocation.lng}"
     :zoom="8"
     >
-    <a id="slider-toggle" href="#"  v-on:click="maxWidth === 0 ? maxWidth = '300px' : maxWidth = 0">&#9776;</a>
+    <a id="slider-toggle" href="#" v-if="!noFile" v-on:click="maxWidth === 0 ? maxWidth = '300px' : maxWidth = 0">&#9776;</a>
       <gmap-marker
          :key="index"
          v-for="(location, index) in locations"
@@ -91,6 +91,9 @@ export default {
   main {
     display: flex;
   }
+  h2 {
+    display:  inline;
+  }
   .vue-map-hidden {
     display: inline !important;
   }
@@ -100,13 +103,11 @@ export default {
     height: 100vh;
   }
   .dates {
-    list-style-type: none;
-    padding: 0;
-    width: 300px;
-  }
-  .dates li {
+    width: 100%;
     text-align: left;
+    list-style-type: none;
     padding-left: 20px;
+    white-space: nowrap;
   }
   #slider-toggle {
     position: absolute;
@@ -116,9 +117,10 @@ export default {
     font-size: 30px;
   }
   .slider {
+    width: 100%;
     height: 100vh;
-    width: 300px;
     overflow-y: auto;
+    overflow-x: hidden;
     transition: max-width 0.2s ease-in-out;
   }
 

@@ -86,10 +86,11 @@ export default {
     margin: 30px;
   }
   .modal {
-    width: 90vw;
+    max-width: 90vw;
+    min-width:  70vw;
     left: 50%;
     top: 15%;
-    height: 70vh;
+    max-height: 70vh;
     position: fixed;
     transform: translateX(-50%);
     background: #759660;
@@ -98,6 +99,7 @@ export default {
     border-radius: 5px;
     transition: ease-out 0.3s all;
     overflow: auto;
+    padding: 20px 10px;
   }
   .flex-container {
     display: flex;
@@ -116,10 +118,10 @@ export default {
     height: 30px;
   }
   .margin-bottom {
-    margin: 50px;
+    margin-bottom: 50px;
   }
   p {
-    margin:  5px 70px 20px;
+    margin: 0 5px 70px 20px;
     font-size: 16px;
   }
   span {
