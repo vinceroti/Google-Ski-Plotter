@@ -42,8 +42,8 @@ export default {
   mounted () {
     const self = this
     socket.on('done', function (res) {
-      console.log(res)
       self.getData(JSON.parse(res))
+      window.localStorage.setItem('map-data', res)
     })
   },
   methods: {

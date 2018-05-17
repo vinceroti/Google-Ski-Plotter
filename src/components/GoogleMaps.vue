@@ -59,6 +59,13 @@ export default {
       noFile: true
     }
   },
+  beforeMount () {
+    const mapData = window.localStorage.getItem('map-data')
+    if (mapData) {
+      this.noFile = false
+      this.getData(JSON.parse(mapData))
+    }
+  },
   mounted: function () {
     this.geolocation()
   },
