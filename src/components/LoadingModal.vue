@@ -7,7 +7,7 @@
         <input type="file" id="file" ref="file" accept="application/json" v-on:change="handleFileUpload()"/>
       </label>
       <button v-bind:disabled="disabled" v-on:click="submitFile()">Submit</button>
-      <div class="full-width bar-container flex-container">
+      <div class="full-width flex-container bar-container ">
         <span class="full-width">{{ progress }}%</span>
         <div class="bar" :style="'width:' + progress + '%'"></div>
       </div>
@@ -85,27 +85,27 @@ export default {
     background: #fff;
     margin: 30px;
   }
-  .bar-container {
-    display: flex;
-  }
   .modal {
     width: 90vw;
-    height: 100vh;
     left: 50%;
-    top: 20%;
-    height: 50%;
+    top: 15%;
+    height: 70vh;
     position: fixed;
     transform: translateX(-50%);
-    background: gray;
+    background: #759660;
     color: #fff;
     z-index: 9;
     border-radius: 5px;
     transition: ease-out 0.3s all;
+    overflow: auto;
   }
   .flex-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+  }
+  .bar-container {
+    justify-content: flex-start;
   }
   .full-width {
     width: 100%;
