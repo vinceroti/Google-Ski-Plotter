@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .bar {
     display: flex;
     height: 5px;
@@ -113,9 +113,6 @@ export default {
     margin-top: 10px;
     width: 100px;
     height: 30px;
-  }
-  .margin-bottom {
-    margin-bottom: 50px;
   }
   span {
     margin: 10px 0;

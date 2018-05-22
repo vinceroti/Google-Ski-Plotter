@@ -1,16 +1,18 @@
 <template>
   <main>
     <LoadingModal :getData="getData" v-if="noFile"/>
-    <div class="slider" v-if="!noFile" v-bind:style="{ maxWidth: maxWidth }" >
+    <div class="slider" v-if="!noFile" :style="{ maxWidth: maxWidth }" >
       <ul class="dates">
         <h2> Days On The Hill </h2>
         <p> Days: {{ dates.length }}
-        <li v-for="(date, index) in dates " v-bind:key="(index + 1) "> {{ date +", " + (index + 1) }} </li>
+        <li v-for="(date, index) in dates " v-bind:key="(index + 1) ">
+          <a target="_blank" :href="`https://www.google.com/maps/timeline?pb=!1m2!1m1!1s${formatedDates[index]}`"> {{ date}} </a>
+        </li>
       </ul>
     </div>
     <gmap-map
     :center="{lat:currentLocation.lat, lng:currentLocation.lng}"
-    :zoom="8"
+    :zoom="zoom"
     >
     <a id="slider-toggle" href="#" v-if="!noFile" v-on:click="maxWidth === 0 ? maxWidth = '300px' : maxWidth = 0">&#9776;</a>
       <gmap-marker
@@ -50,11 +52,13 @@ export default {
   data () {
     return {
       currentLocation: {
-        lat: 0,
-        lng: 0
+        lat: 39.8283,
+        lng: -98.5795
       },
+      zoom: 5,
       locations: '',
       dates: '',
+      formatedDates: [],
       maxWidth: 0,
       noFile: true
     }
@@ -74,6 +78,7 @@ export default {
       this.locations = data.locations
       this.dates = data.dates
       this.noFile = false
+      this.filterDates(data.dates)
     },
     geolocation: function () {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -81,13 +86,20 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
+        this.zoom = 8
+      })
+    },
+    filterDates (dates) {
+      dates.forEach((date) => {
+        const dateObj = new Date(date)
+        this.formatedDates.push(`${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`)
       })
     }
   }
 }
 </script>
 
-<style>
+<style style lang="scss" >
   main {
     display: flex;
   }
@@ -108,6 +120,9 @@ export default {
     list-style-type: none;
     padding-left: 20px;
     white-space: nowrap;
+    a {
+      text-decoration: none;
+    }
   }
   #slider-toggle {
     position: absolute;
@@ -123,5 +138,7 @@ export default {
     overflow-x: hidden;
     transition: max-width 0.2s ease-in-out;
   }
-
+  .margin-bottom {
+    margin-bottom: 50px;
+  }
 </style>
