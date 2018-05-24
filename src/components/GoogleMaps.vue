@@ -5,7 +5,7 @@
       <ul class="dates">
         <h2> Days On The Hill </h2>
         <p> Days: {{ dates.length }}
-        <li v-for="(date, index) in dates " v-bind:key="(index + 1) ">
+        <li v-for="(date, index) in dates" v-bind:key="(index + 1)">
           <a target="_blank" :href="`https://www.google.com/maps/timeline?pb=!1m2!1m1!1s${formatedDates[index]}`"> {{ date}} </a>
         </li>
       </ul>
@@ -18,11 +18,12 @@
       <gmap-marker
          :key="index"
          v-for="(location, index) in locations"
-
+         ref="myMarker"
          :position="{ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
          :clickable="true"
          :draggable="false"
          @click="center={ lat: (location.latitudeE7 / 1e7), lng: (location.longitudeE7 / 1e7) }"
+         :icon="{url: '../../static/marker.png', size: {width: 46, height: 46, f: 'px', b: 'px'}, scaledSize: {width: 40, height: 40, f: 'px', b: 'px'} }"
       ></gmap-marker>
     </gmap-map>
   </main>
@@ -72,6 +73,7 @@ export default {
   },
   mounted: function () {
     this.geolocation()
+    console.log(this.$refs)
   },
   methods: {
     getData (data) {
