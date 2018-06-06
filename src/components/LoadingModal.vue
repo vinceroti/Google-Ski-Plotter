@@ -4,9 +4,9 @@
       <h1 class="full-width">Google Maps Skiing Plotter</h1>
       <p class="full-width">This is an application that will take your google maps history data (possible apple support in the future), and find out how many days you went skiing at a resort. No infomation is saved but it is sent to a server in order to parse through the large JSON file.</p>
       <p> Follow this <a target="_blank" href="https://takeout.google.com/settings/takeout">link</a>, click <b>SELECT NONE</b>, only select <b> Location History
-      JSON format</b>. Unzip file and upload the JSON file.</p>
+      JSON format</b>. Upload ZIP</p>
       <label v-if="!file" class="full-width">
-        <input type="file" id="file" ref="file" accept="application/json" v-on:change="submitFile()"/>
+        <input type="file" id="file" ref="file" accept="application/zip" v-on:change="submitFile()"/>
       </label>
       <div v-if="file" class="full-width flex-container bar-container ">
         <span class="full-width">{{ progress }}%</span>

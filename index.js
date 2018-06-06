@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const unzipper = require('unzipper');
 
 app.use(serveStatic(__dirname + "/dist"));
 
@@ -51,8 +52,9 @@ app.post('/', upload.single('file'), (req, res, next) => {
   let array = [];
   let dates = [];
 
-  let stream = fs.createReadStream(req.file.path),
-      parser = JSONStream.parse('*.*');
+  let stream = fs.createReadStream(req.file.path).pipe(unzipper.ParseOne());
+
+  let parser = JSONStream.parse('*.*');
   stream.pipe(parser);
 
   parser.on('data',  (obj) => {
