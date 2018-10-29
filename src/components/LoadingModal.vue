@@ -2,7 +2,7 @@
   <div  class="modal">
     <div v-if="!loading" ref="handleFileUpload" class="flex-container container">
       <h1 class="full-width">Google Maps Skiing Plotter</h1>
-      <p class="full-width">This is an application that will take your google maps history data (possible apple support in the future), and find out how many days you went skiing at a resort. No infomation is saved but it is sent to a server in order to parse through the large JSON file.</p>
+      <p class="full-width">This is an application that will take your google maps history data, and find out how many days you went skiing at a resort. No infomation is saved but it is sent to a server in order to parse through the large JSON file.</p>
       <p> Follow this <a target="_blank" href="https://takeout.google.com/settings/takeout">link</a>, click <b>SELECT NONE</b>, only select <b> Location History
       JSON format</b>. Upload ZIP</p>
       <label v-if="!file" class="full-width">
