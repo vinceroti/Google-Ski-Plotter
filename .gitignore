@@ -5,6 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 location-full.json
 uploads/
+.env
 
 # Editor directories and files
 .idea
