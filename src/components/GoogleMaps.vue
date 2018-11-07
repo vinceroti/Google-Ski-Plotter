@@ -30,75 +30,76 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import * as VueGoogleMaps from 'vue2-google-maps'
-import LoadingModal from './LoadingModal'
+import Vue from 'vue';
+import * as VueGoogleMaps from 'vue2-google-maps';
+import LoadingModal from './LoadingModal';
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: process.env.MAP_KEY,
-    libraries: 'places' // This is required if you use the Autocomplete plugin
+    key: process.env.VUE_APP_MAPS,
+    libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'
     // (as you require)
-  }
-})
+  },
+});
 
 export default {
   name: 'GoogleMaps',
   components: {
-    LoadingModal
+    LoadingModal,
   },
 
-  data () {
+  data() {
     return {
       currentLocation: {
         lat: 39.8283,
-        lng: -98.5795
+        lng: -98.5795,
       },
       zoom: 5,
       locations: '',
       dates: '',
       formatedDates: [],
       maxWidth: 0,
-      noFile: true
-    }
+      noFile: true,
+    };
   },
-  beforeMount () {
-    const mapData = window.localStorage.getItem('map-data')
+  beforeMount() {
+    const mapData = window.localStorage.getItem('map-data');
+    console.log(process.env.VUE_APP_MAPS);
     if (mapData) {
-      this.noFile = false
-      this.getData(JSON.parse(mapData))
+      this.noFile = false;
+      this.getData(JSON.parse(mapData));
     }
   },
-  mounted: function () {
-    this.geolocation()
-    console.log(this.$refs)
+  mounted() {
+    this.geolocation();
+    console.log(this.$refs);
   },
   methods: {
-    getData (data) {
-      this.locations = data.locations
-      this.dates = data.dates
-      this.noFile = false
-      this.filterDates(data.dates)
+    getData(data) {
+      this.locations = data.locations;
+      this.dates = data.dates;
+      this.noFile = false;
+      this.filterDates(data.dates);
     },
-    geolocation: function () {
+    geolocation() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.currentLocation = {
           lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }
-        this.zoom = 8
-      })
+          lng: position.coords.longitude,
+        };
+        this.zoom = 8;
+      });
     },
-    filterDates (dates) {
+    filterDates(dates) {
       dates.forEach((date) => {
-        const dateObj = new Date(date)
-        this.formatedDates.push(`${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`)
-      })
-    }
-  }
-}
+        const dateObj = new Date(date);
+        this.formatedDates.push(`${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`);
+      });
+    },
+  },
+};
 </script>
 
 <style style lang="scss" >

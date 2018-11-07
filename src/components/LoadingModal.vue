@@ -21,58 +21,59 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { Circle } from 'vue-loading-spinner'
-import io from 'socket.io-client'
-const socket = io.connect(process.env.SERVER)
+import axios from 'axios';
+import { Circle } from 'vue-loading-spinner';
+import io from 'socket.io-client';
+
+const socket = io.connect(process.env.VUE_APP_SERVER);
 
 export default {
   name: 'LoadingModal',
   props: ['getData'],
   components: {
-    'loading-circle': Circle
+    'loading-circle': Circle,
   },
-  data () {
+  data() {
     return {
       file: '',
       loading: false,
-      progress: 0
-    }
+      progress: 0,
+    };
   },
-  mounted () {
-    const self = this
-    socket.on('done', function (res) {
-      self.getData(JSON.parse(res))
-      window.localStorage.setItem('map-data', res)
-    })
+  mounted() {
+    const self = this;
+    socket.on('done', (res) => {
+      self.getData(JSON.parse(res));
+      window.localStorage.setItem('map-data', res);
+    });
   },
   methods: {
-    submitFile () {
-      const self = this
-      const formData = new FormData()
-      this.file = true
-      formData.append('file', this.$refs.file.files[0])
-      formData.append('socketId', socket.id)
+    submitFile() {
+      const self = this;
+      const formData = new FormData();
+      this.file = true;
+      formData.append('file', this.$refs.file.files[0]);
+      formData.append('socketId', socket.id);
 
       axios.post(process.env.SERVER, formData, {
-        onUploadProgress: function (progressEvent) {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          self.progress = progress
+        onUploadProgress(progressEvent) {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          self.progress = progress;
           if (progress === 100) {
-            self.loading = true
+            self.loading = true;
           }
         },
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(function (res) {
-        console.log(res.data.status)
-      }).catch(function (res) {
-        console.log('FAILURE!!', res)
-      })
-    }
-  }
-}
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((res) => {
+        console.log(res.data.status);
+      }).catch((res) => {
+        console.log('FAILURE!!', res);
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
