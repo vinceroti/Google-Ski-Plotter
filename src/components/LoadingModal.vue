@@ -55,7 +55,7 @@ export default {
       formData.append('file', this.$refs.file.files[0]);
       formData.append('socketId', socket.id);
 
-      axios.post(process.env.SERVER, formData, {
+      axios.post(process.env.VUE_APP_SERVER, formData, {
         onUploadProgress(progressEvent) {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           self.progress = progress;

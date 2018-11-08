@@ -17,28 +17,26 @@ app.use((req, res, next) => {
   next();
 });
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-// in latest body-parser use like below.
-app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const multer = require('multer');
 
 const upload = multer({ dest: 'uploads/' });
 
 const mountains = {
-  crystal: [(46.9282 * 1e7), (-121.5045 * 1e7)],
-  snoqual: [(47.43916491 * 1e7), (-121.424331636 * 1e7)],
-  stevens: [(47.7448 * 1e7), (-121.0890 * 1e7)],
-  vail: [(39.6403 * 1e7), (-106.3742 * 1e7)],
-  copper: [(39.5021 * 1e7), (-106.1510 * 1e7)],
-  breck: [(39.4817 * 1e7), (-106.0384 * 1e7)],
-  loveland: [(39.6800 * 1e7), (-105.8979 * 1e7)],
-  abasin: [(39.6423 * 1e7), (-105.8717 * 1e7)],
-  keystone: [(39.6045 * 1e7), (-105.9545 * 1e7)],
-  timberline: [(45.3311 * 1e7), (-121.7110 * 1e7)],
-  whistler: [(50.1150 * 1e7), (-122.9486 * 1e7)],
-  skicooper: [(39.3608 * 1e7), (-106.3028 * 1e7)],
+  crystal: [46.9282 * 1e7, -121.5045 * 1e7],
+  snoqual: [47.43916491 * 1e7, -121.424331636 * 1e7],
+  stevens: [47.7448 * 1e7, -121.089 * 1e7],
+  vail: [39.6403 * 1e7, -106.3742 * 1e7],
+  copper: [39.5021 * 1e7, -106.151 * 1e7],
+  breck: [39.4817 * 1e7, -106.0384 * 1e7],
+  loveland: [39.68 * 1e7, -105.8979 * 1e7],
+  abasin: [39.6423 * 1e7, -105.8717 * 1e7],
+  keystone: [39.6045 * 1e7, -105.9545 * 1e7],
+  timberline: [45.3311 * 1e7, -121.711 * 1e7],
+  whistler: [50.115 * 1e7, -122.9486 * 1e7],
+  skicooper: [39.3608 * 1e7, -106.3028 * 1e7],
 };
 
 app.post('/', upload.single('file'), (req, res, next) => {
@@ -70,8 +68,10 @@ app.post('/', upload.single('file'), (req, res, next) => {
         var confidence = obj.activity[0].activity[0].confidence;
       }
       if (
-        (obj.latitudeE7 > (mountains[mountain][0] - 300000) && obj.latitudeE7 < (mountains[mountain][0] + 300000)) &&
-        (obj.longitudeE7 > (mountains[mountain][1] - 300000) && obj.longitudeE7 < (mountains[mountain][1] + 300000) &&
+        obj.latitudeE7 > mountains[mountain][0] - 300000 &&
+        obj.latitudeE7 < mountains[mountain][0] + 300000 &&
+        (obj.longitudeE7 > mountains[mountain][1] - 300000 &&
+          obj.longitudeE7 < mountains[mountain][1] + 300000 &&
           type === 'ON_BICYCLE' &&
           confidence > 70)
       ) {
@@ -84,10 +84,13 @@ app.post('/', upload.single('file'), (req, res, next) => {
   });
 
   parser.on('end', () => {
-    io.to(socketId).emit('done', JSON.stringify({
-      locations: array,
-      dates: dates.reverse(),
-    }));
+    io.to(socketId).emit(
+      'done',
+      JSON.stringify({
+        locations: array,
+        dates: dates.reverse(),
+      }),
+    );
     fs.unlink(req.file.path, (err) => {
       if (err) throw err;
       console.log(`${req.file.path} was deleted`);
