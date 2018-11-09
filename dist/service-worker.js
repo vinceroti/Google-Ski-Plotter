@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.f1ea03e0b9b7b5c26a412bae3673d893.js"
+  "/precache-manifest.8675e5ff7bedb5fcaaccec2f565a714c.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "skiing-plotter"});
