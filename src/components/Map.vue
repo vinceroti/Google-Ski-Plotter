@@ -1,7 +1,6 @@
 <template>
   <main>
     <LoadingModal :getData="getData" v-if="noFile"/>
-    {{ currentLocation }}
     <div class="slider" v-if="!noFile" :style="{ maxWidth: maxWidth }" >
       <ul class="dates">
         <h2> Days On The Hill </h2>
