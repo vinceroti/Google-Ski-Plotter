@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npm run server | npm run serve",
     "serve": "vue-cli-service serve",
+    "start": "node index.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "server": "pm2 start index.js"
