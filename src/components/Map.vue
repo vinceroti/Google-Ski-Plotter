@@ -71,7 +71,7 @@ export default {
       maxWidth: 0,
       noFile: true,
       Licon: L.icon({ iconUrl: Marker, iconSize: [46, 46] }),
-      LTileUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      LTileUrl: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
       Lattribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       googleUrl: 'https://www.google.com/maps/timeline?pb=!1m2!1m1!1s',
     };
@@ -94,10 +94,10 @@ export default {
       this.filterDates(data.dates);
     },
     geolocation() {
-      var options = {
+      const options = {
         enableHighAccuracy: true,
         timeout: 5000,
-        maximumAge: 0
+        maximumAge: 0,
       };
       function success(pos) {
         this.currentLocation = {
