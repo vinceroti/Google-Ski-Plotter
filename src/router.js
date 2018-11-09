@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import GoogleMaps from './components/GoogleMaps.vue';
+import Map from './components/Map.vue';
 
 Vue.use(Router);
 
@@ -9,8 +9,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Google Maps',
-      component: GoogleMaps,
+      name: 'Map',
+      component: Map,
     },
   ],
 });

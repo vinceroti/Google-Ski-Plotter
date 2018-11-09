@@ -73,7 +73,7 @@ app.post('/', upload.single('file'), (req, res, next) => {
         (obj.longitudeE7 > mountains[mountain][1] - 300000 &&
           obj.longitudeE7 < mountains[mountain][1] + 300000 &&
           type === 'ON_BICYCLE' &&
-          confidence > 70)
+          confidence > 10)
       ) {
         array.push(obj);
         dates.push(currentDate);
@@ -87,7 +87,7 @@ app.post('/', upload.single('file'), (req, res, next) => {
     io.to(socketId).emit(
       'done',
       JSON.stringify({
-        locations: array,
+        locations: array.reverse(),
         dates: dates.reverse(),
       }),
     );

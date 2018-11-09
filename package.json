@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "server": "pm2 start index.js --watch --name server --ignore-watch='./uploads/*'"
+    "server": "pm2 start index.js"
   },
   "dependencies": {
     "JSONStream": "^1.3.5",
@@ -23,7 +23,8 @@
     "vue": "^2.5.17",
     "vue-loading-spinner": "^1.0.11",
     "vue-router": "^3.0.1",
-    "vue2-google-maps": "^0.10.2"
+    "vue2-google-maps": "^0.10.2",
+    "vue2-leaflet": "^1.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",
