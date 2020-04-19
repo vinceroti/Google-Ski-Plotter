@@ -1,28 +1,31 @@
-const express = require('express');
+const express = require("express");
 
 const app = express();
-const JSONStream = require('JSONStream');
-const fs = require('fs');
-const bodyParser = require('body-parser');
-const serveStatic = require('serve-static');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const unzipper = require('unzipper');
+const JSONStream = require("JSONStream");
+const fs = require("fs");
+const bodyParser = require("body-parser");
+const serveStatic = require("serve-static");
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+const unzipper = require("unzipper");
 
 app.use(serveStatic(`${__dirname}/dist`));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const multer = require('multer');
+const multer = require("multer");
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 const mountains = {
   crystal: [46.9282 * 1e7, -121.5045 * 1e7],
@@ -36,28 +39,27 @@ const mountains = {
   keystone: [39.6045 * 1e7, -105.9545 * 1e7],
   timberline: [45.3311 * 1e7, -121.711 * 1e7],
   whistler: [50.115 * 1e7, -122.9486 * 1e7],
-  skicooper: [39.3608 * 1e7, -106.3028 * 1e7],
+  skicooper: [39.3608 * 1e7, -106.3028 * 1e7]
 };
 
-app.post('/', upload.single('file'), (req, res, next) => {
-  console.log(req.body, req.file);
-
+app.post("/", upload.single("file"), (req, res) => {
   const socketId = req.body.socketId;
   res.json({
-    status: 'file recieved',
+    status: "file recieved"
   });
 
-  let lastMatchDate = '';
+  let lastMatchDate = "";
 
   const array = [];
   const dates = [];
 
-  const stream = fs.createReadStream(req.file.path).pipe(unzipper.ParseOne());
-
-  const parser = JSONStream.parse('*.*');
+  const stream = fs
+    .createReadStream(req.file.path)
+    .pipe(unzipper.ParseOne(/Location History.json/gm));
+  const parser = JSONStream.parse("*.*");
   stream.pipe(parser);
 
-  parser.on('data', (obj) => {
+  parser.on("data", obj => {
     const currentDate = new Date(parseInt(obj.timestampMs)).toDateString();
     if (lastMatchDate === currentDate) {
       return;
@@ -70,10 +72,10 @@ app.post('/', upload.single('file'), (req, res, next) => {
       if (
         obj.latitudeE7 > mountains[mountain][0] - 300000 &&
         obj.latitudeE7 < mountains[mountain][0] + 300000 &&
-        (obj.longitudeE7 > mountains[mountain][1] - 300000 &&
-          obj.longitudeE7 < mountains[mountain][1] + 300000 &&
-          type === 'ON_BICYCLE' &&
-          confidence > 10)
+        obj.longitudeE7 > mountains[mountain][1] - 300000 &&
+        obj.longitudeE7 < mountains[mountain][1] + 300000 &&
+        type === "ON_BICYCLE" &&
+        confidence > 10
       ) {
         array.push(obj);
         dates.push(currentDate);
@@ -83,29 +85,21 @@ app.post('/', upload.single('file'), (req, res, next) => {
     }
   });
 
-  parser.on('end', () => {
+  parser.on("end", () => {
     io.to(socketId).emit(
-      'done',
+      "done",
       JSON.stringify({
         locations: array.reverse(),
-        dates: dates.reverse(),
-      }),
+        dates: dates.reverse()
+      })
     );
-    fs.unlink(req.file.path, (err) => {
+    fs.unlink(req.file.path, err => {
       if (err) throw err;
       console.log(`${req.file.path} was deleted`);
     });
   });
 });
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
-
 http.listen(process.env.PORT || 8081, () => {
-  console.log('API listening');
+  console.log("API listening");
 });
