@@ -1,4 +1,10 @@
-# skiing-plotter
+# Google-Ski-Plotter
+
+# Description
+Google ski plotter is an Express/Vue web app that takes your google location data and determines if you're skiing or snowboarding based on
+location data and activity data provided by Google. This is android specific because android correctly tracks your data.
+
+NOTE: This will only determine if you're skiing inbounds at a resort. Skewed data might exist such as mountain biking at resorts due to google thinking both actitvties are the same based on speed and vertical descent
 
 ## Project setup
 ```
